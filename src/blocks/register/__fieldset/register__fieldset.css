@@ -1,0 +1,16 @@
+.register__fieldset {
+  margin: 0 0 28px;
+  padding: 0;
+  border: none;
+  position: relative;
+}
+
+.register__fieldset:last-of-type {
+  margin-bottom: 214px;
+}
+
+@media screen and (max-width: 767px) {
+  .register__fieldset:last-of-type {
+    margin-bottom: 173px;
+  }
+}

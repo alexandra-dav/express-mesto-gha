@@ -1,0 +1,22 @@
+.elements__favorit {
+    width: 22px;
+    height: 19px;
+    padding: 0;
+    margin: 0;
+    background-image: url(../../../images/Vector.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.elements__favorit:hover {
+    opacity: 0.6;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.elements__favorit:active {
+    background-image: url(../../../images/Union.svg);
+    opacity: 1;
+}

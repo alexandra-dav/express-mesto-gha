@@ -1,0 +1,10 @@
+.elements__container {
+    min-height: 361px;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    color: black;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}

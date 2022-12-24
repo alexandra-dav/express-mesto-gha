@@ -1,0 +1,6 @@
+.photo__image {
+    max-height: 75vh;
+    max-width: 75vw;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

@@ -1,0 +1,14 @@
+.elements__image {
+    width: 282px;
+    height: 282px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+/* не нашла как должен изменяться элемент при наведении на картинку */
+.elements__image:hover {
+/*     width: 290px;
+    height: 290px;
+    transition: 0.3s; */
+    cursor: pointer;
+}
