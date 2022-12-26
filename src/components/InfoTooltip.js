@@ -1,5 +1,6 @@
 import success from '../images/success.jpg';
-import failure from '../images/failure.jpg'
+import failure from '../images/failure.jpg';
+import React from "react";
 
 export function InfoTooltip({ isOpen, onClose, isLogInSuccess, isAuthorized, isNoAuthorized}) {
   return (

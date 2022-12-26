@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { PopupWithForm } from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
@@ -38,6 +38,7 @@ export function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       title="Редактировать профиль"
       name="profile"
       buttonText="Сохранить"
+      // eslint-disable-next-line react/no-children-prop
       children={
         <>
           <fieldset className="popup__fieldset">

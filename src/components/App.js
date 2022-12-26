@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import { Route, Switch, useHistory } from "react-router-dom";
-import { Header } from "./Header";
-import { Main } from "./Main";
-import { Footer } from "./Footer";
-import { PopupWithForm } from "./PopupWithForm";
-import { ImagePopup } from "./ImagePopup";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import * as auth from "../utils/auth.js";
-import { api } from "../utils/Api";
-import { EditProfilePopup } from "./EditProfilePopup";
-import { EditAvatarPopup } from "./EditAvatarPopup";
-import { AddPlacePopup } from "./AddPlacePopup";
-import { InfoTooltip } from "./InfoTooltip";
-import ProtectedRoute from "./ProtectedRoute";
-import Login from "./Login";
-import Register from "./Register";
+import React, { useEffect, useState } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import { Header } from './Header';
+import { Main } from './Main';
+import Footer from './Footer';
+import { PopupWithForm } from './PopupWithForm';
+import { ImagePopup } from './ImagePopup';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import * as auth from '../utils/auth.js';
+import { api } from '../utils/Api';
+import { EditProfilePopup } from './EditProfilePopup';
+import { EditAvatarPopup } from './EditAvatarPopup';
+import { AddPlacePopup } from './AddPlacePopup';
+import { InfoTooltip } from './InfoTooltip';
+import ProtectedRoute from './ProtectedRoute';
+import Login from './Login';
+import Register from './Register';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -24,7 +24,7 @@ function App() {
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
   const [selectedCard, handleCardClick] = useState({});
   const [currentUser, setCurrentUser] = useState({});
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState('');
   const [card, setCards] = useState([]);
   const [loggedIn, isLoggedIn] = useState(false);
   const [isRegisterSuccess, setIsRegisterSuccess] = useState(true);
@@ -52,16 +52,16 @@ function App() {
   }
   function handleClikButtunClose(evt) {
     if (
-      evt.target.classList.contains("popup_opened") ||
-      evt.target.classList.contains("popup__close")
+      evt.target.classList.contains('popup_opened') ||
+      evt.target.classList.contains('popup__close')
     ) {
       handleClosePopap();
     }
   }
   function handleLogOut() {
     isLoggedIn(false);
-    setUserEmail("");
-    localStorage.removeItem("jwt");
+    setUserEmail('');
+    localStorage.removeItem('jwt');
   }
 
   // Получаем данные о пользователе
@@ -73,21 +73,21 @@ function App() {
         setCurrentUser(userData);
       })
       .catch((err) =>
-        console.log("Ошибка: ", err, " код ошибки: ", err.status)
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status)
       );
-    }    
+    }
   }, [loggedIn]);
   // закрыть попапы
   useEffect(() => {
     function handleEscClose(e) {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         handleClosePopap();
       }
     }
 
-    document.addEventListener("keydown", handleEscClose);
+    document.addEventListener('keydown', handleEscClose);
     return () => {
-      document.removeEventListener("keydown", handleEscClose);
+      document.removeEventListener('keydown', handleEscClose);
     };
   });
   useEffect(() => {
@@ -98,7 +98,7 @@ function App() {
         setCards(cardData);
       })
       .catch((err) =>
-        console.log("Ошибка: ", err, " код ошибки: ", err.status)
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status)
       );
     }
   }, [loggedIn]);
@@ -116,7 +116,7 @@ function App() {
         );
       })
       .catch((err) =>
-        console.log("Ошибка: ", err, " код ошибки: ", err.status)
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status)
       );
   }
   function handleCardDelete(card) {
@@ -126,7 +126,7 @@ function App() {
         setCards((state) => state.filter((c) => c._id !== card._id));
       })
       .catch((err) =>
-        console.log("Ошибка: ", err, " код ошибки: ", err.status)
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status)
       );
   }
   function handleUpdateUser(newDataProfile) {
@@ -137,7 +137,7 @@ function App() {
         handleClosePopap();
       })
       .catch((err) =>
-        console.log("Ошибка: ", err, " код ошибки: ", err.status)
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status)
       );
   }
   function handleUpdateAvatar(newLinkAvatar) {
@@ -148,7 +148,7 @@ function App() {
         handleClosePopap();
       })
       .catch((err) =>
-        console.log("Ошибка: ", err, " код ошибки: ", err.status)
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status)
       );
   }
   function handleAddPlaceSubmit(newPlaceCard) {
@@ -160,7 +160,7 @@ function App() {
         handleClosePopap();
       })
       .catch((err) =>
-        console.log("Ошибка: ", err, " код ошибки: ", err.status)
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status)
       );
   }
 
@@ -171,11 +171,11 @@ function App() {
         if (res.statusCode !== 400) {
           setIsRegisterSuccess(true);
           setInfoTooltipOpen(true);
-          history.push("/sing-in");
+          history.push('/sing-in');
         }
       })
       .catch((err) => {
-        console.log("Ошибка: ", err, " код ошибки: ", err.status);
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status);
         setIsRegisterSuccess(false);
         setInfoTooltipOpen(true);
       });
@@ -185,30 +185,30 @@ function App() {
       .authorize(data)
       .then((res) => {
         if (res.token) {
-          localStorage.setItem("jwt", res.token);
+          localStorage.setItem('jwt', res.token);
           isLoggedIn(true);
           setUserEmail(data.email);
-          history.push("/");
+          history.push('/');
         }
       })
       .catch((err) => {
-        console.log("Ошибка: ", err, " код ошибки: ", err.status);
+        console.log('Ошибка: ', err, ' код ошибки: ', err.status);
       });
   }
   useEffect(() => {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
+    if (localStorage.getItem('jwt')) {
+      const jwt = localStorage.getItem('jwt');
       auth
         .checkToken(jwt)
         .then((res) => {
-          if (res) {
+          if (res){
             isLoggedIn(true);
             setUserEmail(res.data.email);
-            history.push("/");
+            history.push('/');
           }
         })
         .catch((err) =>
-          console.log("Ошибка: ", err, " код ошибки: ", err.status)
+          console.log('Ошибка: ', err, ' код ошибки: ', err.status)
         );
     }
   }, [loggedIn, userEmail, history]);
@@ -218,15 +218,15 @@ function App() {
       <Header onLogOut={handleLogOut} email={userEmail} />
 
       <Switch>
-        <Route path="/sing-in">
+        <Route path='/sing-in'>
           <Login onAuthorize={handleAuthorize} />
         </Route>
 
-        <Route path="/sing-up">
+        <Route path='/sing-up'>
           <Register onRegister={handleRegisterUser} />
         </Route>
         <ProtectedRoute
-          path="/"
+          path='/'
           loggedIn={loggedIn}
           component={Main}
           card={card}
@@ -241,9 +241,9 @@ function App() {
 
       <Footer />
       <PopupWithForm
-        title="Вы уверены?"
-        name="delete-card"
-        buttonText="Да"
+        title='Вы уверены?'
+        name='delete-card'
+        buttonText='Да'
         isOpen={false}
       />
 
@@ -275,8 +275,8 @@ function App() {
         isOpen={isInfoTooltipOpen}
         onClose={handleClikButtunClose}
         isLogInSuccess={isRegisterSuccess}
-        isAuthorized="Вы успешно зарегистрировались!"
-        isNoAuthorized="Что-то пошло не так! Попробуйте ещё раз."
+        isAuthorized='Вы успешно зарегистрировались!'
+        isNoAuthorized='Что-то пошло не так! Попробуйте ещё раз.'
       />
     </CurrentUserContext.Provider>
   );

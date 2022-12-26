@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { PopupWithForm } from "./PopupWithForm";
+import React, { useState, useEffect } from 'react';
+import { PopupWithForm } from './PopupWithForm';
 
 export function AddPlacePopup({ isOpen, onClose, AddPlacePopup }) {
   const [nameInput, setName] = useState('');
@@ -27,6 +27,7 @@ export function AddPlacePopup({ isOpen, onClose, AddPlacePopup }) {
       title="Новое место"
       name="elements"
       buttonText="Создать"
+      // eslint-disable-next-line react/no-children-prop
       children={
         <>
           <fieldset className="popup__fieldset">

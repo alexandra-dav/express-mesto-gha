@@ -1,20 +1,14 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-export function Card({
-  key,
-  card,
-  onCardDelete,
-  onCardClick,
-  onCardLike
-}) {
+export function Card({ key, card, onCardDelete, onCardClick, onCardLike }) {
   const currentUser = useContext(CurrentUserContext);
   const ownerCard = card.owner;
   // Определяем, являемся ли мы владельцем текущей карточки
   const isOwn = ownerCard._id === currentUser._id;
   // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
-  const isLiked = card.likes.some(i => i._id === currentUser._id);
-  
+  const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
   return (
     <article className="elements__container" key={key}>
       <img
@@ -30,7 +24,9 @@ export function Card({
             aria-label="like"
             name="favorit"
             id="favorit"
-            className={`elements__favorit ${isLiked ? "elements__favorit_active" : ""}`}
+            className={`elements__favorit ${
+              isLiked ? "elements__favorit_active" : ""
+            }`}
             type="button"
             onClick={onCardLike}
           ></button>

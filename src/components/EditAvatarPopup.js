@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { PopupWithForm } from "./PopupWithForm";
 
 export function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
@@ -21,6 +21,7 @@ export function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       title="Обновить аватар"
       name="avatar"
       buttonText="Сохранить"
+      // eslint-disable-next-line react/no-children-prop
       children={
         <>
           <fieldset className="popup__fieldset">

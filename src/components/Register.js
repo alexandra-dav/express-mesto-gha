@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
-function Register({onRegister}) {
+function Register(onRegister) {
   const [data, setData] = useState({
     email: '',
     password: ''
@@ -17,7 +17,7 @@ function Register({onRegister}) {
   const handlSubmit = (e) => {
     e.preventDefault();
     let { password, email } = data;
-    onRegister({password, email});    
+    onRegister({password, email});
   }
 
   return (
@@ -68,10 +68,11 @@ function Register({onRegister}) {
              Войти
           </Link>
             </p>
-          
+
         </div>
       </form>
     </div>
   );
 }
+
 export default Register;

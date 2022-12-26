@@ -16,7 +16,7 @@ export default function Login({onAuthorize}) {
   const handlSubmit = (e) => {
     e.preventDefault();
     let { password, email } = data;
-    onAuthorize({password, email});    
+    onAuthorize({password, email});
   }
 
   return (
