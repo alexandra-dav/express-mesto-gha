@@ -23,4 +23,26 @@ router.post('/', (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка при создании новой карточки' }));
 });
 
+router.put('/:cardId/likes', (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+    })
+    .then(card => res.send({ data: card }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка при добавлении отметки карточки лайком' }));
+});
+
+router.delete('/:cardId/likes', (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+    })
+    .then(card => res.send({ data: card }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка при удалении отметки карточки лайком' }));
+});
+
 module.exports = router;
