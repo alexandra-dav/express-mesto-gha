@@ -10,7 +10,14 @@ function ValidationError(res){
 
 module.exports.showAllUsers = (req, res) => {
   User.find({})
-    .then(user => res.send(user))
+    .then(data => {
+      const dataFormat = [];
+      data.forEach(user => {
+        const { name, about, avatar, _id } = user;
+        dataFormat.push({ name, about, avatar, _id });
+      });
+      res.send(dataFormat);
+    })
     .catch((err) => {
       if(err.name === 'Error 404' || err.name === 'CastError'){
         notFoundError(res);
@@ -24,7 +31,10 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then(user => res.send(user))
+    .then(user => {
+      const { name, about, avatar, _id } = user;
+      res.send({ name, about, avatar, _id });
+    })
     .catch((err) => {
       if(err.name === 'ValidationError'){
         ValidationError(res);
@@ -36,7 +46,10 @@ module.exports.createUser = (req, res) => {
 
 module.exports.showUser =  (req, res) => {
   User.findById(req.params.userId)
-    .then(user => res.send(user))
+    .then(user => {
+      const { name, about, avatar, _id } = user;
+      res.send({ name, about, avatar, _id });
+    })
     .catch((err) => {
       if(err.name === 'Error 404' || err.name === 'CastError'){
         notFoundError(res);
@@ -55,7 +68,10 @@ module.exports.updateUserData =  (req, res) => {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
     })
-    .then(user => res.send(user))
+    .then(user => {
+      const { name, about, avatar, _id } = user;
+      res.send({ name, about, avatar, _id });
+    })
     .catch((err) => {
       if(err.name === 'ValidationError'){
         ValidationError(res);
@@ -78,7 +94,10 @@ module.exports.updateUserAvatar = (req, res) => {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
     })
-    .then(user => res.send(user))
+    .then(user => {
+      const { name, about, avatar, _id } = user;
+      res.send({ name, about, avatar, _id });
+    })
     .catch((err) => {
       if(err.name === 'ValidationError'){
         ValidationError(res);

@@ -3,13 +3,20 @@ const Card = require('../models/cards');
 
 module.exports.showAllCards = (req, res) => {
   Card.find({})
-    .then(cards => res.send(cards))
+    .then(data => {
+      const dataFormat = [];
+      data.forEach(card => {
+        const { likes, _id, name, link, owner, createdAt } = card;
+        dataFormat.push({ likes, _id, name, link, owner, createdAt });
+      });
+      res.send(dataFormat);
+    })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка при получении списка всех карточек' }));
 };
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then(card => res.send(card))
+    .then(() => res.send({"message":"Пост удалён"}))
     .catch((err) =>{
     if(err.name === 'Error 404' || err.name === 'CastError'){
       res.status(404).send({ message: `Карточка для удаления не найдена.`});
@@ -31,7 +38,14 @@ module.exports.createCard = (req, res) => {
       new: true,
       runValidators: true
     })
-    .then(card => res.send(card))
+    .then(data => {
+      const dataFormat = [];
+      data.forEach(card => {
+        const { likes, _id, name, link, owner, createdAt } = card;
+        dataFormat.push({ likes, _id, name, link, owner, createdAt });
+      });
+      res.send(dataFormat);
+    })
     .catch((err) => {
       if(err.name === 'ValidationError'){
         res.status(400).send({ message: `Данные пользователя не валидны.`});
@@ -48,7 +62,14 @@ module.exports.likeCard = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
     })
-    .then(card => res.send(card))
+    .then(data => {
+      const dataFormat = [];
+      data.forEach(card => {
+        const { likes, _id, name, link, owner, createdAt } = card;
+        dataFormat.push({ likes, _id, name, link, owner, createdAt });
+      });
+      res.send(dataFormat);
+    })
     .catch((err) => {
       if(err.name === 'Error 404' || err.name === 'CastError'){
         res.status(404).send({ message: `Карточка не найдена.`});
@@ -69,7 +90,14 @@ module.exports.dislikeCard = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
     })
-    .then(card => res.send(card))
+    .then(data => {
+      const dataFormat = [];
+      data.forEach(card => {
+        const { likes, _id, name, link, owner, createdAt } = card;
+        dataFormat.push({ likes, _id, name, link, owner, createdAt });
+      });
+      res.send(dataFormat);
+    })
     .catch((err) => {
       if(err.name === 'Error 404' || err.name === 'CastError'){
         res.status(404).send({ message: `Карточка не найдена.`});
