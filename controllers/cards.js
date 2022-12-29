@@ -17,7 +17,7 @@ module.exports.showAllCards = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  if (req.params.cardId.length != 24) {
+  if (req.params.cardId.length != 24 || req.params.cardId === null) {
     res.status(400).send({ message: `Данные не валидны.`});
     return;
   }
@@ -56,7 +56,7 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.likeCard = (req, res) => {
-  if (req.params.cardId.length != 24) {
+  if (req.params.cardId.length != 24 || req.params.cardId === null) {
     res.status(400).send({ message: `Данные не валидны.`});
     return;
   }
@@ -80,7 +80,7 @@ module.exports.likeCard = (req, res) => {
 };
 
 module.exports.dislikeCard = (req, res) => {
-  if (req.params.cardId.length != 24) {
+  if (req.params.cardId.length != 24 || req.params.cardId === null) {
     res.status(400).send({ message: `Данные не валидны.`});
     return;
   }
