@@ -23,12 +23,7 @@ module.exports.showAllUsers = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
-  User.create(
-    { name, about, avatar },
-    {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-    })
+  User.create({ name, about, avatar })
     .then(user => res.send(user))
     .catch((err) => {
       if(err.name === 'ValidationError'){
