@@ -1,6 +1,8 @@
 /* eslint-disable no-undef */
 const router = require('express').Router();
-const { showAllUsers, createUser, showUser, updateUserData, updateUserAvatar } = require('../controllers/users');
+const {
+  showAllUsers, createUser, showUser, updateUserData, updateUserAvatar,
+} = require('../controllers/users');
 
 router.get('/', showAllUsers);
 router.post('/', createUser);
