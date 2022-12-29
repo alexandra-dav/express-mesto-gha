@@ -29,22 +29,10 @@ module.exports.deleteCard = (req, res) => {
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
-  Card.create(
-    {
-      name,
-      link
-    },
-    {
-      new: true,
-      runValidators: true
-    })
-    .then(data => {
-      const dataFormat = [];
-      data.forEach(card => {
-        const { likes, _id, name, link, owner, createdAt } = card;
-        dataFormat.push({ likes, _id, name, link, owner, createdAt });
-      });
-      res.send(dataFormat);
+  Card.create({ name, link, owner: req.user})
+    .then(card => {
+      const { likes, _id, name, link, owner, createdAt } = card;
+      res.status(200).send({ likes, _id, name, link, owner, createdAt });
     })
     .catch((err) => {
       if(err.name === 'ValidationError'){

@@ -1,29 +1,33 @@
 /* eslint-disable no-undef */
-const User = require('../models/user');
+const User = require("../models/user");
 
 function notFoundError(res) {
-  res.status(404).send({ message: `Пользователь не найден.`});
+  res.status(404).send({ message: `Пользователь не найден.` });
 }
-function ValidationError(res){
-  res.status(400).send({ message: `Данные пользователя не валидны.`});
+function ValidationError(res) {
+  res.status(400).send({ message: `Данные пользователя не валидны.` });
 }
 
 module.exports.showAllUsers = (req, res) => {
   User.find({})
-    .then(data => {
+    .then((data) => {
       const dataFormat = [];
-      data.forEach(user => {
+      data.forEach((user) => {
         const { name, about, avatar, _id } = user;
         dataFormat.push({ name, about, avatar, _id });
       });
       res.send(dataFormat);
     })
     .catch((err) => {
-      if(err.name === 'Error 404' || err.name === 'CastError'){
+      if (err.name === "Error 404" || err.name === "CastError") {
         notFoundError(res);
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка при получении списка всех пользователей.' })
+      res
+        .status(500)
+        .send({
+          message: "Произошла ошибка при получении списка всех пользователей.",
+        });
     });
 };
 
@@ -31,35 +35,45 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then(user => {
+    .then((user) => {
       const { name, about, avatar, _id } = user;
       res.send({ name, about, avatar, _id });
     })
     .catch((err) => {
-      if(err.name === 'ValidationError'){
+      if (err.name === "ValidationError") {
         ValidationError(res);
         return;
       }
-      res.status(500).send({ message: `Произошла ошибка при создании нового пользователя.`});
+      res
+        .status(500)
+        .send({
+          message: `Произошла ошибка при создании нового пользователя.`,
+        });
     });
 };
 
-module.exports.showUser =  (req, res) => {
-  User.findById(req.params.userId)
-    .then(user => {
+module.exports.showUser = (req, res) => {
+  if (req.params.userId.length != 24) {
+    notFoundError(res);
+    return;
+  }
+  else {
+    User.findById(req.params.userId)
+    .then((user) => {
+      if (user === null) {
+        ValidationError(res);
+        return;
+      }
       const { name, about, avatar, _id } = user;
       res.send({ name, about, avatar, _id });
     })
-    .catch((err) => {
-      if(err.name === 'Error 404' || err.name === 'CastError'){
-        notFoundError(res);
-        return;
-      }
-      res.status(500).send({ message: 'Произошла ошибка при получении данных пользователя.' })
-  });
-};
+    .catch(() => {
+      res.status(500).send({message: `Произошла ошибка при получении данных пользователя.`})}
+    );
+  }
+}
 
-module.exports.updateUserData =  (req, res) => {
+module.exports.updateUserData = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -67,21 +81,26 @@ module.exports.updateUserData =  (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
-    })
-    .then(user => {
+    }
+  )
+    .then((user) => {
       const { name, about, avatar, _id } = user;
       res.send({ name, about, avatar, _id });
     })
     .catch((err) => {
-      if(err.name === 'ValidationError'){
+      if (err.name === "ValidationError") {
         ValidationError(res);
         return;
       }
-      if(err.name === 'Error 404' || err.name === 'CastError'){
+      if (err.name === "Error 404" || err.name === "CastError") {
         notFoundError(res);
         return;
       }
-      res.status(500).send({ message: `Произошла ошибка при обновлении данных пользователя. ${err.name}` })
+      res
+        .status(500)
+        .send({
+          message: `Произошла ошибка при обновлении данных пользователя. ${err.name}`,
+        });
     });
 };
 
@@ -93,20 +112,26 @@ module.exports.updateUserAvatar = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
-    })
-    .then(user => {
+    }
+  )
+    .then((user) => {
       const { name, about, avatar, _id } = user;
       res.send({ name, about, avatar, _id });
     })
     .catch((err) => {
-      if(err.name === 'ValidationError'){
+      if (err.name === "ValidationError") {
         ValidationError(res);
         return;
       }
-      if(err.name === 'Error 404' || err.name === 'CastError'){
+      if (err.name === "Error 404" || err.name === "CastError") {
         notFoundError(res);
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка при обновлении аватара пользователя.' })
-  });
+      res
+        .status(500)
+        .send({
+          message: "Произошла ошибка при обновлении аватара пользователя.",
+        });
+    });
 };
+
