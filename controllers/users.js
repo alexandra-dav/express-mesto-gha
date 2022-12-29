@@ -54,14 +54,14 @@ module.exports.createUser = (req, res) => {
 
 module.exports.showUser = (req, res) => {
   if (req.params.userId.length != 24) {
-    notFoundError(res);
+    ValidationError(res);
     return;
   }
   else {
     User.findById(req.params.userId)
     .then((user) => {
       if (user === null) {
-        ValidationError(res);
+        notFoundError(res);
         return;
       }
       const { name, about, avatar, _id } = user;
