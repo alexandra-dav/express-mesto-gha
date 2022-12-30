@@ -6,11 +6,14 @@ function notFoundError(res) {
 function ValidationError(res) {
   res.status(400).send({ message: 'Данные пользователя не валидны.' });
 }
+function nonexistentID(data) {
+  data.status(400).send({ message: 'Невалидный ID пользователя.' });
+}
 
 module.exports.showAllUsers = (req, res) => {
   User.find({})
     .then((data) => {
-    /* const arr = data.map((user) => {
+      /* const arr = data.map((user) => {
         const {
           name, about, avatar, _id,
         } = user;
@@ -22,11 +25,9 @@ module.exports.showAllUsers = (req, res) => {
       res.send(data); // нужно ли исключить поле __v?
     })
     .catch(() => {
-      res
-        .status(500)
-        .send({
-          message: 'Произошла ошибка при получении списка всех пользователей.',
-        });
+      res.status(500).send({
+        message: 'Произошла ошибка при получении списка всех пользователей.',
+      });
     });
 };
 
@@ -48,42 +49,35 @@ module.exports.createUser = (req, res) => {
         ValidationError(res);
         return;
       }
-      res
-        .status(500)
-        .send({
-          message: 'Произошла ошибка при создании нового пользователя.',
-        });
+      res.status(500).send({
+        message: 'Произошла ошибка при создании нового пользователя.',
+      });
     });
 };
 
 module.exports.showUser = (req, res) => {
-  if (req.params.userId.length !== 24) {
-    ValidationError(res);
-  } else {
-    User.findById(req.params.userId)
-      .then((user) => {
-        if (user === null) {
-          notFoundError(res);
-          return;
-        }
-        const {
-          name, about, avatar, _id,
-        } = user;
-        res.send({
-          name,
-          about,
-          avatar,
-          _id,
-        });
-      })
-      .catch(() => {
-        res
-          .status(500)
-          .send({
-            message: 'Произошла ошибка при получении данных пользователя.',
-          });
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (user === null) {
+        notFoundError(res);
+        return;
+      }
+      const {
+        name, about, avatar, _id,
+      } = user;
+      res.send({
+        name, about, avatar, _id,
       });
-  }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        nonexistentID(res);
+        return;
+      }
+      res.status(500).send({
+        message: 'Произошла ошибка при получении данных пользователя.',
+      });
+    });
 };
 
 module.exports.updateUserData = (req, res) => {
@@ -111,8 +105,12 @@ module.exports.updateUserData = (req, res) => {
         ValidationError(res);
         return;
       }
-      if (err.name === 'Error 404' || err.name === 'CastError') {
+      if (err.name === 'Error 404') {
         notFoundError(res);
+        return;
+      }
+      if (err.name === 'CastError') {
+        nonexistentID(res);
         return;
       }
       res.status(500).send({
@@ -146,8 +144,12 @@ module.exports.updateUserAvatar = (req, res) => {
         ValidationError(res);
         return;
       }
-      if (err.name === 'Error 404' || err.name === 'CastError') {
+      if (err.name === 'Error 404') {
         notFoundError(res);
+        return;
+      }
+      if (err.name === 'CastError') {
+        nonexistentID(res);
         return;
       }
       res.status(500).send({
