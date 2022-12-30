@@ -1,18 +1,16 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+import express from 'express';
+import { connect } from 'mongoose';
+import { json, urlencoded } from 'body-parser';
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
@@ -27,7 +25,4 @@ app.use((req, res, next) => {
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.listen(PORT, () => {
-  // Если всё работает, консоль покажет, какой порт приложение слушает
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);
