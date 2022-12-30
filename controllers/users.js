@@ -10,22 +10,18 @@ function ValidationError(res) {
 module.exports.showAllUsers = (req, res) => {
   User.find({})
     .then((data) => {
-      const dataFormat = [];
-      data.forEach((user) => {
+    /* const arr = data.map((user) => {
         const {
           name, about, avatar, _id,
         } = user;
-        dataFormat.push({
+
+        return {
           name, about, avatar, _id,
-        });
-      });
-      res.send(dataFormat);
+        };
+      }); */
+      res.send(data); // нужно ли исключить поле __v?
     })
-    .catch((err) => {
-      if (err.name === 'Error 404' || err.name === 'CastError') {
-        notFoundError(res);
-        return;
-      }
+    .catch(() => {
       res
         .status(500)
         .send({
@@ -35,14 +31,16 @@ module.exports.showAllUsers = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  /* const { name, about, avatar } = req.body; */
   User.create({ ...req.body })
     .then((user) => {
       const {
         name, about, avatar, _id,
       } = user;
-      res.send({
-        name, about, avatar, _id,
+      res.status(201).send({
+        name,
+        about,
+        avatar,
+        _id,
       });
     })
     .catch((err) => {
@@ -72,17 +70,23 @@ module.exports.showUser = (req, res) => {
           name, about, avatar, _id,
         } = user;
         res.send({
-          name, about, avatar, _id,
+          name,
+          about,
+          avatar,
+          _id,
         });
       })
       .catch(() => {
-        res.status(500).send({ message: 'Произошла ошибка при получении данных пользователя.' });
+        res
+          .status(500)
+          .send({
+            message: 'Произошла ошибка при получении данных пользователя.',
+          });
       });
   }
 };
 
 module.exports.updateUserData = (req, res) => {
-  /* const { name, about } = req.body; */
   User.findByIdAndUpdate(
     req.user._id,
     { ...req.body },
@@ -96,7 +100,10 @@ module.exports.updateUserData = (req, res) => {
         name, about, avatar, _id,
       } = user;
       res.send({
-        name, about, avatar, _id,
+        name,
+        about,
+        avatar,
+        _id,
       });
     })
     .catch((err) => {
@@ -108,16 +115,13 @@ module.exports.updateUserData = (req, res) => {
         notFoundError(res);
         return;
       }
-      res
-        .status(500)
-        .send({
-          message: `Произошла ошибка при обновлении данных пользователя. ${err.name}`,
-        });
+      res.status(500).send({
+        message: `Произошла ошибка при обновлении данных пользователя. ${err.name}`,
+      });
     });
 };
 
 module.exports.updateUserAvatar = (req, res) => {
-  /* const { avatar } = req.body; */
   User.findByIdAndUpdate(
     req.user._id,
     { ...req.body },
@@ -131,7 +135,10 @@ module.exports.updateUserAvatar = (req, res) => {
         name, about, avatar, _id,
       } = user;
       res.send({
-        name, about, avatar, _id,
+        name,
+        about,
+        avatar,
+        _id,
       });
     })
     .catch((err) => {
@@ -143,10 +150,8 @@ module.exports.updateUserAvatar = (req, res) => {
         notFoundError(res);
         return;
       }
-      res
-        .status(500)
-        .send({
-          message: 'Произошла ошибка при обновлении аватара пользователя.',
-        });
+      res.status(500).send({
+        message: 'Произошла ошибка при обновлении аватара пользователя.',
+      });
     });
 };

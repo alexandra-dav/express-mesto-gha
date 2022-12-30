@@ -1,13 +1,12 @@
 const express = require('express');
 const { connect } = require('mongoose');
-const { json, urlencoded } = require('body-parser');
 
 const { PORT = 3001 } = process.env;
 
 const app = express();
 
-app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // подключаемся к серверу mongo
 connect('mongodb://localhost:27017/mestodb', {

@@ -1,5 +1,15 @@
 const Card = require('../models/cards');
 
+function ValidationError(data) {
+  data.status(400).send({ message: 'Данные не валидны.' });
+}
+function notFoundError(data) {
+  data.status(404).send({ message: 'Карточка не найдена.' });
+}
+function nonexistentID(data) {
+  data.status(404).send({ message: 'Невалидный ID карточки.' });
+}
+
 module.exports.showAllCards = (req, res) => {
   Card.find({})
     .then((data) => {
@@ -17,24 +27,24 @@ module.exports.showAllCards = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка при получении списка всех карточек' }));
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, err) => {
   if (req.params.cardId.length !== 24 || req.params.cardId === null) {
     res.status(400).send({ message: 'Данные не валидны.' });
+    return;
+  }
+  if (err.name === 'CastError') {
+    nonexistentID(res);
     return;
   }
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (card === null) {
-        res.status(404).send({ message: 'Карточка не найдена.' });
+        notFoundError(res);
         return;
       }
       res.status(200).send({ message: 'Пост удалён' });
     })
-    .catch((err) => {
-      if (err.name === 'Error 404' || err.name === 'CastError') {
-        res.status(404).send({ message: 'Карточка для удаления не найдена.' });
-        return;
-      }
+    .catch(() => {
       res.status(500).send({ message: `Произошла ошибка при удалении карточки ${err.name}` });
     });
 };
@@ -51,7 +61,11 @@ module.exports.createCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Данные пользователя не валидны.' });
+        ValidationError(res);
+        return;
+      }
+      if (err.name === 'CastError') {
+        nonexistentID(res);
         return;
       }
       res.status(500).send({ message: `Произошла ошибка при создании новой карточки ${err.name}` });
@@ -60,7 +74,7 @@ module.exports.createCard = (req, res) => {
 
 module.exports.likeCard = (req, res) => {
   if (req.params.cardId.length !== 24 || req.params.cardId === null) {
-    res.status(400).send({ message: 'Данные не валидны.' });
+    ValidationError(res);
     return;
   }
   Card.findByIdAndUpdate(
@@ -89,7 +103,7 @@ module.exports.likeCard = (req, res) => {
 
 module.exports.dislikeCard = (req, res) => {
   if (req.params.cardId.length !== 24 || req.params.cardId === null) {
-    res.status(400).send({ message: 'Данные не валидны.' });
+    ValidationError(res);
     return;
   }
   Card.findByIdAndUpdate(
