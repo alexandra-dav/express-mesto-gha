@@ -84,6 +84,7 @@ module.exports.showUser = (req, res) => {
 };
 
 module.exports.updateUserData = (req, res) => {
+  // const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
     { ...req.body },
@@ -93,27 +94,16 @@ module.exports.updateUserData = (req, res) => {
     },
   )
     .then((user) => {
-      if (user === null) {
-        notFoundError(res);
-        return;
-      }
       const {
         name, about, avatar, _id,
       } = user;
       res.send({
-        name,
-        about,
-        avatar,
-        _id,
+        name, about, avatar, _id,
       });
     })
     .catch((err) => {
       if (err.name === errorCod.noValidData) {
         ValidationError(res);
-        return;
-      }
-      if (err.name === errorCod.noValidID) {
-        nonexistentID(res);
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
@@ -132,10 +122,6 @@ module.exports.updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => {
-      if (user === null) {
-        notFoundError(res);
-        return;
-      }
       const {
         name, about, avatar, _id,
       } = user;
@@ -149,10 +135,6 @@ module.exports.updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === errorCod.noValidData) {
         ValidationError(res);
-        return;
-      }
-      if (err.name === errorCod.noValidID) {
-        nonexistentID(res);
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
