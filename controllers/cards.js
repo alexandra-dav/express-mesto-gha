@@ -11,9 +11,9 @@ function nonexistentID(data) {
 }
 
 module.exports.showAllCards = (req, res) => {
-  Card.find({})
+  Card.find({}).populate(['owner', 'likes'])
     .then((data) => {
-      const dataFormat = [];
+      /* const dataFormat = [];
       data.forEach((card) => {
         const {
           likes, _id, name, link, owner, createdAt,
@@ -21,8 +21,8 @@ module.exports.showAllCards = (req, res) => {
         dataFormat.push({
           likes, _id, name, link, owner, createdAt,
         });
-      });
-      res.send(dataFormat);
+      }); */
+      res.send(data);
     })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка при получении списка всех карточек' }));
 };
@@ -36,13 +36,13 @@ module.exports.deleteCard = (req, res, err) => {
     nonexistentID(res);
     return;
   }
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId).populate(['owner', 'likes'])
     .then((card) => {
       if (card === null) {
         notFoundError(res);
         return;
       }
-      res.status(200).send({ message: 'Пост удалён' });
+      res.status(200).send(card);
     })
     .catch(() => {
       res.status(500).send({ message: `Произошла ошибка при удалении карточки ${err.name}` });
@@ -50,26 +50,10 @@ module.exports.deleteCard = (req, res, err) => {
 };
 
 module.exports.createCard = (req, res) => {
-  Card.create({ ...req.body, owner: req.user })
-    .then((card) => {
-      const {
-        likes, _id, name, link, owner, createdAt,
-      } = card;
-      res.status(200).send({
-        likes, _id, name, link, owner, createdAt,
-      });
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        ValidationError(res);
-        return;
-      }
-      if (err.name === 'CastError') {
-        nonexistentID(res);
-        return;
-      }
-      res.status(500).send({ message: `Произошла ошибка при создании новой карточки ${err.name}` });
-    });
+  Card.create({ ...req.body, owner: req.user._id })
+    .then((card) => Card.findById(card._id).populate(['owner']))
+    .then((fullCard) => res.status(201).send(fullCard))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка при создании новой карточки.' }));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -83,18 +67,13 @@ module.exports.likeCard = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
     },
-  )
+  ).populate(['owner', 'likes'])
     .then((card) => {
       if (card === null) {
         res.status(404).send({ message: 'Карточка не найдена.' });
         return;
       }
-      const {
-        likes, _id, name, link, owner, createdAt,
-      } = card;
-      res.send({
-        likes, _id, name, link, owner, createdAt,
-      });
+      res.send(card);
     })
     .catch(() => {
       res.status(500).send({ message: 'Произошла ошибка при добавлении отметки карточки лайком' });
@@ -112,7 +91,7 @@ module.exports.dislikeCard = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
     },
-  )
+  ).populate(['owner', 'likes'])
     .then((card) => {
       if (card === null) {
         res.status(404).send({ message: 'Карточка не найдена.' });
