@@ -1,7 +1,7 @@
 const express = require('express');
 const { json, urlencoded } = require('express');
 const { connect } = require('mongoose');
-const cors = require('cors');
+const router = require('./routes/index');
 
 const { PORT = 3001 } = process.env;
 
@@ -16,16 +16,6 @@ connect('mongodb://localhost:27017/mestodb', {
 });
 
 // подключаем мидлвары, роуты и всё остальное...
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63ac5751b1864cc7a7a030a9',
-  };
-
-  next();
-});
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
-
-app.use('*', cors(), (req, res, next) => next(res.status(404).send({ message: 'Ошибка запроса: проверьте метод и эндпоинт.' })));
+app.use('/', router);
 
 app.listen(PORT);
