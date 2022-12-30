@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-undef */
 const Card = require('../models/cards');
 
 module.exports.showAllCards = (req, res) => {
@@ -42,9 +40,7 @@ module.exports.deleteCard = (req, res) => {
 };
 
 module.exports.createCard = (req, res) => {
-  const { name, link } = req.body;
-
-  Card.create({ name, link, owner: req.user })
+  Card.create({ ...req.body, owner: req.user })
     .then((card) => {
       const {
         likes, _id, name, link, owner, createdAt,

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const router = require('express').Router();
 const {
   showAllCards, deleteCard, createCard, likeCard, dislikeCard,

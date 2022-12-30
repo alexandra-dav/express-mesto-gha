@@ -1,5 +1,3 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-undef */
 const User = require('../models/user');
 
 function notFoundError(res) {
@@ -37,9 +35,8 @@ module.exports.showAllUsers = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-
-  User.create({ name, about, avatar })
+  /* const { name, about, avatar } = req.body; */
+  User.create({ ...req.body })
     .then((user) => {
       const {
         name, about, avatar, _id,
@@ -85,10 +82,10 @@ module.exports.showUser = (req, res) => {
 };
 
 module.exports.updateUserData = (req, res) => {
-  const { name, about } = req.body;
+  /* const { name, about } = req.body; */
   User.findByIdAndUpdate(
     req.user._id,
-    { name, about },
+    { ...req.body },
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
@@ -120,10 +117,10 @@ module.exports.updateUserData = (req, res) => {
 };
 
 module.exports.updateUserAvatar = (req, res) => {
-  const { avatar } = req.body;
+  /* const { avatar } = req.body; */
   User.findByIdAndUpdate(
     req.user._id,
-    { avatar },
+    { ...req.body },
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением

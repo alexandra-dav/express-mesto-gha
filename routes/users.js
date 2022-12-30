@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const router = require('express').Router();
 const {
   showAllUsers, createUser, showUser, updateUserData, updateUserAvatar,

@@ -1,7 +1,6 @@
-/* eslint-disable no-undef */
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const cardSchema = new mongoose.Schema({
+const cardSchema = new Schema({
   name: {
     type: String,
     minlength: 2,
@@ -13,12 +12,12 @@ const cardSchema = new mongoose.Schema({
     required: true,
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'user',
     required: true,
   },
   likes: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [Schema.Types.ObjectId],
     ref: 'user',
     default: [],
   },
@@ -27,4 +26,4 @@ const cardSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-module.exports = mongoose.model('card', cardSchema);
+module.exports = model('card', cardSchema);

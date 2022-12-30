@@ -1,7 +1,6 @@
-/* eslint-disable no-undef */
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     minlength: 2,
@@ -19,4 +18,4 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 });
-module.exports = mongoose.model('user', userSchema);
+module.exports = model('user', userSchema);
