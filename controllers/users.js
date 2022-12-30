@@ -1,13 +1,16 @@
+const {
+  errorCod, errorMassage, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
+} = require('../utils/constants');
 const User = require('../models/user');
 
 function notFoundError(res) {
-  res.status(404).send({ message: 'Пользователь не найден.' });
+  res.status(ERROR_NOT_FOUND).send({ message: `${errorMassage.notFoundUser}` });
 }
 function ValidationError(res) {
-  res.status(400).send({ message: 'Данные пользователя не валидны.' });
+  res.status(ERROR_VALIDATION).send({ message: `${errorMassage.userNotValid}` });
 }
 function nonexistentID(data) {
-  data.status(400).send({ message: 'Невалидный ID пользователя.' });
+  data.status(ERROR_VALIDATION).send({ message: `${errorMassage.notFoundUserID}` });
 }
 
 module.exports.showAllUsers = (req, res) => {
@@ -25,8 +28,8 @@ module.exports.showAllUsers = (req, res) => {
       res.send(data); // нужно ли исключить поле __v?
     })
     .catch(() => {
-      res.status(500).send({
-        message: 'Произошла ошибка при получении списка всех пользователей.',
+      res.status(ERROR_INTERNAL_SERVER).send({
+        message: `${errorMassage.errorShowAllUsers}`,
       });
     });
 };
@@ -45,12 +48,12 @@ module.exports.createUser = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === errorCod.noValidData) {
         ValidationError(res);
         return;
       }
-      res.status(500).send({
-        message: 'Произошла ошибка при создании нового пользователя.',
+      res.status(ERROR_INTERNAL_SERVER).send({
+        message: `${errorMassage.errorCreateUser}`,
       });
     });
 };
@@ -70,12 +73,12 @@ module.exports.showUser = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === errorCod.noValidID) {
         nonexistentID(res);
         return;
       }
-      res.status(500).send({
-        message: 'Произошла ошибка при получении данных пользователя.',
+      res.status(ERROR_INTERNAL_SERVER).send({
+        message: `${errorMassage.errorShowUser}`,
       });
     });
 };
@@ -90,6 +93,10 @@ module.exports.updateUserData = (req, res) => {
     },
   )
     .then((user) => {
+      if (user === null) {
+        notFoundError(res);
+        return;
+      }
       const {
         name, about, avatar, _id,
       } = user;
@@ -101,20 +108,16 @@ module.exports.updateUserData = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === errorCod.noValidData) {
         ValidationError(res);
         return;
       }
-      if (err.name === 'Error 404') {
-        notFoundError(res);
-        return;
-      }
-      if (err.name === 'CastError') {
+      if (err.name === errorCod.noValidID) {
         nonexistentID(res);
         return;
       }
-      res.status(500).send({
-        message: `Произошла ошибка при обновлении данных пользователя. ${err.name}`,
+      res.status(ERROR_INTERNAL_SERVER).send({
+        message: `${errorMassage.errorUpdateUserData}`,
       });
     });
 };
@@ -129,6 +132,10 @@ module.exports.updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => {
+      if (user === null) {
+        notFoundError(res);
+        return;
+      }
       const {
         name, about, avatar, _id,
       } = user;
@@ -140,20 +147,16 @@ module.exports.updateUserAvatar = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === errorCod.noValidData) {
         ValidationError(res);
         return;
       }
-      if (err.name === 'Error 404') {
-        notFoundError(res);
-        return;
-      }
-      if (err.name === 'CastError') {
+      if (err.name === errorCod.noValidID) {
         nonexistentID(res);
         return;
       }
-      res.status(500).send({
-        message: 'Произошла ошибка при обновлении аватара пользователя.',
+      res.status(ERROR_INTERNAL_SERVER).send({
+        message: `${errorMassage.errorUpdateUserAvatar}`,
       });
     });
 };
