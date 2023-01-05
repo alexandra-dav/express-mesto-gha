@@ -16,15 +16,6 @@ function nonexistentID(data) {
 module.exports.showAllCards = (req, res) => {
   Card.find({}).populate(['owner', 'likes'])
     .then((data) => {
-      /* const dataFormat = [];
-      data.forEach((card) => {
-        const {
-          likes, _id, name, link, owner, createdAt,
-        } = card;
-        dataFormat.push({
-          likes, _id, name, link, owner, createdAt,
-        });
-      }); */
       res.send(data);
     })
     .catch(() => res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_LIST}` }));
@@ -77,10 +68,10 @@ module.exports.likeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === errorCod.noValidData) {
+      /* if (err.name === errorCod.noValidData) {
         ValidationError(res);
         return;
-      }
+      } */
       if (err.name === errorCod.noValidID) {
         nonexistentID(res);
         return;
@@ -102,19 +93,13 @@ module.exports.dislikeCard = (req, res) => {
         notFoundError(res);
         return;
       }
-      /* const {
-        likes, _id, name, link, owner, createdAt,
-      } = card;
-      res.send({
-        likes, _id, name, link, owner, createdAt,
-      }); */
       res.send(card);
     })
     .catch((err) => {
-      if (err.name === errorCod.noValidData) {
+      /* if (err.name === errorCod.noValidData) {
         ValidationError(res);
         return;
-      }
+      } */
       if (err.name === errorCod.noValidID) {
         nonexistentID(res);
         return;
