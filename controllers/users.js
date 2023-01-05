@@ -4,13 +4,13 @@ const {
 const User = require('../models/user');
 
 function notFoundError(res) {
-  res.status(ERROR_NOT_FOUND).send({ message: `${errorMassage.notFoundUser}` });
+  res.status(ERROR_NOT_FOUND).send({ message: `${errorMassage.USER_NOT_FOUND}` });
 }
 function ValidationError(res) {
-  res.status(ERROR_VALIDATION).send({ message: `${errorMassage.userNotValid}` });
+  res.status(ERROR_VALIDATION).send({ message: `${errorMassage.USER_NOT_VALID}` });
 }
 function nonexistentID(data) {
-  data.status(ERROR_VALIDATION).send({ message: `${errorMassage.notFoundUserID}` });
+  data.status(ERROR_VALIDATION).send({ message: `${errorMassage.USER_ID_NOT_FOUND}` });
 }
 
 module.exports.showAllUsers = (req, res) => {
@@ -29,7 +29,7 @@ module.exports.showAllUsers = (req, res) => {
     })
     .catch(() => {
       res.status(ERROR_INTERNAL_SERVER).send({
-        message: `${errorMassage.errorShowAllUsers}`,
+        message: `${errorMassage.USER_ERROR_LIST}`,
       });
     });
 };
@@ -53,7 +53,7 @@ module.exports.createUser = (req, res) => {
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
-        message: `${errorMassage.errorCreateUser}`,
+        message: `${errorMassage.USER_ERROR_CREATE}`,
       });
     });
 };
@@ -78,13 +78,12 @@ module.exports.showUser = (req, res) => {
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
-        message: `${errorMassage.errorShowUser}`,
+        message: `${errorMassage.USER_ERROR_INFO}`,
       });
     });
 };
 
 module.exports.updateUserData = (req, res) => {
-  // const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
     { ...req.body },
@@ -107,7 +106,7 @@ module.exports.updateUserData = (req, res) => {
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
-        message: `${errorMassage.errorUpdateUserData}`,
+        message: `${errorMassage.USER_ERROR_UPDATE_DATE}`,
       });
     });
 };
@@ -138,7 +137,7 @@ module.exports.updateUserAvatar = (req, res) => {
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
-        message: `${errorMassage.errorUpdateUserAvatar}`,
+        message: `${errorMassage.USER_ERROR_UPDATE_AVATAR}`,
       });
     });
 };

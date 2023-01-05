@@ -4,13 +4,13 @@ const {
 } = require('../utils/constants');
 
 function ValidationError(data) {
-  data.status(ERROR_VALIDATION).send({ message: `${errorMassage.cardNotValid}` });
+  data.status(ERROR_VALIDATION).send({ message: `${errorMassage.CARD_NOT_VALID}` });
 }
 function notFoundError(data) {
-  data.status(ERROR_NOT_FOUND).send({ message: `${errorMassage.notFoundCard}` });
+  data.status(ERROR_NOT_FOUND).send({ message: `${errorMassage.CARD_NOT_FOUND}` });
 }
 function nonexistentID(data) {
-  data.status(ERROR_VALIDATION).send({ message: `${errorMassage.notFoundCardID}` });
+  data.status(ERROR_VALIDATION).send({ message: `${errorMassage.CARD_ID_NOT_FOUND}` });
 }
 
 module.exports.showAllCards = (req, res) => {
@@ -27,7 +27,7 @@ module.exports.showAllCards = (req, res) => {
       }); */
       res.send(data);
     })
-    .catch(() => res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.errorShowAllCards}` }));
+    .catch(() => res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_LIST}` }));
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -44,7 +44,7 @@ module.exports.deleteCard = (req, res) => {
         nonexistentID(res);
         return;
       }
-      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.errorCardDelete}` });
+      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_DELETE}` });
     });
 };
 
@@ -57,7 +57,7 @@ module.exports.createCard = (req, res) => {
         ValidationError(res);
         return;
       }
-      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.errorCardCreate}` });
+      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_CREATE}` });
     });
 };
 
@@ -85,7 +85,7 @@ module.exports.likeCard = (req, res) => {
         nonexistentID(res);
         return;
       }
-      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.errorLikeCard}` });
+      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_LIKE}` });
     });
 };
 
@@ -119,6 +119,6 @@ module.exports.dislikeCard = (req, res) => {
         nonexistentID(res);
         return;
       }
-      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.errorDeleteLikeCard}` });
+      res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_DISLIKE}` });
     });
 };
