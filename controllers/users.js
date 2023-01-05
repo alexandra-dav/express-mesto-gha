@@ -84,6 +84,10 @@ module.exports.updateUserData = (req, res) => {
     },
   )
     .then((user) => {
+      if (user === null) {
+        notFoundError(res);
+        return;
+      }
       const {
         name, about, avatar, _id,
       } = user;
@@ -112,6 +116,10 @@ module.exports.updateUserAvatar = (req, res) => {
     },
   )
     .then((user) => {
+      if (user === null) {
+        notFoundError(res);
+        return;
+      }
       const {
         name, about, avatar, _id,
       } = user;
