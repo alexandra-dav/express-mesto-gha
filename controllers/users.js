@@ -1,5 +1,5 @@
 const {
-  errorCod, errorMassage, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
+  errorCod, errorMassage, CREATED, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
 } = require('../utils/constants');
 const User = require('../models/user');
 
@@ -16,16 +16,7 @@ function nonexistentID(data) {
 module.exports.showAllUsers = (req, res) => {
   User.find({})
     .then((data) => {
-      /* const arr = data.map((user) => {
-        const {
-          name, about, avatar, _id,
-        } = user;
-
-        return {
-          name, about, avatar, _id,
-        };
-      }); */
-      res.send(data); // нужно ли исключить поле __v?
+      res.send(data);
     })
     .catch(() => {
       res.status(ERROR_INTERNAL_SERVER).send({
@@ -40,7 +31,7 @@ module.exports.createUser = (req, res) => {
       const {
         name, about, avatar, _id,
       } = user;
-      res.status(201).send({
+      res.status(CREATED).send({
         name,
         about,
         avatar,

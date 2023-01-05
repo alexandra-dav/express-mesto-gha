@@ -4,6 +4,7 @@ exports.errorCod = {
   noValidID: 'CastError',
 };
 // Тут описаны коды ответов
+exports.CREATED = 201;
 exports.ERROR_NOT_FOUND = 404;
 exports.ERROR_VALIDATION = 400;
 exports.ERROR_INTERNAL_SERVER = 500;

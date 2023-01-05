@@ -1,6 +1,6 @@
 const Card = require('../models/cards');
 const {
-  errorCod, errorMassage, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
+  errorCod, errorMassage, CREATED, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
 } = require('../utils/constants');
 
 function ValidationError(data) {
@@ -28,7 +28,7 @@ module.exports.deleteCard = (req, res) => {
         notFoundError(res);
         return;
       }
-      res.status(200).send(card);
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === errorCod.noValidID) {
@@ -42,7 +42,7 @@ module.exports.deleteCard = (req, res) => {
 module.exports.createCard = (req, res) => {
   Card.create({ ...req.body, owner: req.user._id })
     .then((card) => Card.findById(card._id).populate(['owner']))
-    .then((fullCard) => res.status(201).send(fullCard))
+    .then((fullCard) => res.status(CREATED).send(fullCard))
     .catch((err) => {
       if (err.name === errorCod.noValidData) {
         ValidationError(res);
@@ -96,10 +96,6 @@ module.exports.dislikeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      /* if (err.name === errorCod.noValidData) {
-        ValidationError(res);
-        return;
-      } */
       if (err.name === errorCod.noValidID) {
         nonexistentID(res);
         return;
