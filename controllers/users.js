@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const {
   errorCod, errorMassage, CREATED, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
 } = require('../utils/constants');
@@ -26,16 +27,27 @@ module.exports.showAllUsers = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  User.create({ ...req.body })
+  /* Метод принимает на вход два параметра:
+  пароль и длину так называемой «соли» —
+  случайной строки, которую метод добавит
+  к паролю перед хешированем. */
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => User.create({
+      ...req.body,
+      email: req.body.email,
+      password: hash, // записываем хеш в базу
+    }))
     .then((user) => {
       const {
-        name, about, avatar, _id,
+        name, about, avatar, _id, email, password,
       } = user;
       res.status(CREATED).send({
         name,
         about,
         avatar,
         _id,
+        email,
+        password,
       });
     })
     .catch((err) => {
