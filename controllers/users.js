@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
+const validator = require('validator');
+const jwt = require('jsonwebtoken');
 const {
-  errorCod, errorMassage, CREATED, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
+  errorCod, errorMassage,
+  CREATED, ERROR_UNAUTHORIZED, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
 } = require('../utils/constants');
 const User = require('../models/user');
 
@@ -31,34 +34,36 @@ module.exports.createUser = (req, res) => {
   пароль и длину так называемой «соли» —
   случайной строки, которую метод добавит
   к паролю перед хешированем. */
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => User.create({
-      ...req.body,
-      email: req.body.email,
-      password: hash, // записываем хеш в базу
-    }))
-    .then((user) => {
-      const {
-        name, about, avatar, _id, email, password,
-      } = user;
-      res.status(CREATED).send({
-        name,
-        about,
-        avatar,
-        _id,
-        email,
-        password,
+  if (validator.isEmail(req.body.email)) {
+    bcrypt.hash(req.body.password, 10)
+      .then((hash) => User.create({
+        ...req.body,
+        email: req.body.email,
+        password: hash, // записываем хеш в базу
+      }))
+      .then((user) => {
+        const {
+          name, about, avatar, _id, email, password,
+        } = user;
+        res.status(CREATED).send({
+          name,
+          about,
+          avatar,
+          _id,
+          email,
+          password,
+        });
+      })
+      .catch((err) => {
+        if (err.name === errorCod.noValidData) {
+          ValidationError(res);
+          return;
+        }
+        res.status(ERROR_INTERNAL_SERVER).send({
+          message: `${errorMassage.USER_ERROR_CREATE}`,
+        });
       });
-    })
-    .catch((err) => {
-      if (err.name === errorCod.noValidData) {
-        ValidationError(res);
-        return;
-      }
-      res.status(ERROR_INTERNAL_SERVER).send({
-        message: `${errorMassage.USER_ERROR_CREATE}`,
-      });
-    });
+  }
 };
 
 module.exports.showUser = (req, res) => {
@@ -150,5 +155,41 @@ module.exports.updateUserAvatar = (req, res) => {
       res.status(ERROR_INTERNAL_SERVER).send({
         message: `${errorMassage.USER_ERROR_UPDATE_AVATAR}`,
       });
+    });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      return bcrypt.compare(password, user.password);
+    })
+    // eslint-disable-next-line consistent-return
+    .then((matched) => {
+      if (!matched) {
+        // хеши не совпали — отклоняем промис
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+
+      // аутентификация успешна
+      const token = jwt.sign(
+        { _id: matched },
+        { expiresIn: '7d' },
+      );
+      /*
+      TODO:
+      записывать JWT в httpOnly куку
+      */
+      res.send({ token });
+    })
+    .catch((err) => {
+      res
+        .status(ERROR_UNAUTHORIZED)
+        .send({ message: err.message });
     });
 };

@@ -23,7 +23,7 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true, // Email должен быть уникальным
+    unique: true,
   },
   password: {
     type: String,

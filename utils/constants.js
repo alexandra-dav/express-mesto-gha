@@ -5,6 +5,7 @@ exports.errorCod = {
 };
 // Тут описаны коды ответов
 exports.CREATED = 201;
+exports.ERROR_UNAUTHORIZED = 401;
 exports.ERROR_NOT_FOUND = 404;
 exports.ERROR_VALIDATION = 400;
 exports.ERROR_INTERNAL_SERVER = 500;
@@ -18,6 +19,7 @@ exports.errorMassage = {
   USER_ERROR_INFO: 'Произошла ошибка при получении данных пользователя.',
   USER_ERROR_UPDATE_DATE: 'Произошла ошибка при обновлении данных пользователя.',
   USER_ERROR_UPDATE_AVATAR: 'Произошла ошибка при обновлении аватара пользователя.',
+  USER_ERROR_UNAUTHORIZED: 'Ошибка авторизации пользователя: проверьте логин и пароль.',
   CARD_NOT_VALID: 'Данные не валидны.',
   CARD_NOT_FOUND: 'Карточка не найдена.',
   CARD_ID_NOT_FOUND: 'Невалидный ID карточки.',
