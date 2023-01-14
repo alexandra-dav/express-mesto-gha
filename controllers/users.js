@@ -193,3 +193,22 @@ module.exports.login = (req, res) => {
         .send({ message: err.message });
     });
 };
+module.exports.showOwner = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (user === null) {
+        notFoundError(res);
+        return;
+      }
+      res.send({ user });
+    })
+    .catch((err) => {
+      if (err.name === errorCod.noValidID) {
+        nonexistentID(res);
+        return;
+      }
+      res.status(ERROR_INTERNAL_SERVER).send({
+        message: `${errorMassage.USER_ERROR_INFO}`,
+      });
+    });
+};

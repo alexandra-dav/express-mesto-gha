@@ -1,5 +1,7 @@
-/* const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const { ERROR_UNAUTHORIZED } = require('../utils/constants');
 
+// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   // достаём авторизационный заголовок
   const { authorization } = req.headers;
@@ -21,11 +23,10 @@ module.exports = (req, res, next) => {
   } catch (err) {
     // отправим ошибку, если не получилось
     return res
-      .status(401)
+      .status(ERROR_UNAUTHORIZED)
       .send({ message: 'Необходима авторизация' });
   }
   req.user = payload; // записываем пейлоуд в объект запроса
 
   next(); // пропускаем запрос дальше
 };
- */
