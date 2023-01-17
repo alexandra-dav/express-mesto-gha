@@ -3,7 +3,7 @@ const {
   errorCod, errorMassage, CREATED, ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
 } = require('../utils/constants');
 
-function ValidationError(data) {
+function validationError(data) {
   data.status(ERROR_VALIDATION).send({ message: `${errorMassage.CARD_NOT_VALID}` });
 }
 function notFoundError(data) {
@@ -22,13 +22,18 @@ module.exports.showAllCards = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId).populate(['owner', 'likes'])
+  Card.findById(req.params.cardId).populate(['owner', 'likes'])
     .then((card) => {
       if (card === null) {
         notFoundError(res);
         return;
       }
-      res.send(card);
+      if (req.user._id !== card.owner._id.toString()) {
+        res.status(400).send({ message: 'Вы не можете удалить эту карточку!' });
+        return;
+      }
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((cardData) => res.send(cardData));
     })
     .catch((err) => {
       if (err.name === errorCod.noValidID) {
@@ -45,7 +50,7 @@ module.exports.createCard = (req, res) => {
     .then((fullCard) => res.status(CREATED).send(fullCard))
     .catch((err) => {
       if (err.name === errorCod.noValidData) {
-        ValidationError(res);
+        validationError(res);
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_CREATE}` });
@@ -68,10 +73,6 @@ module.exports.likeCard = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      /* if (err.name === errorCod.noValidData) {
-        ValidationError(res);
-        return;
-      } */
       if (err.name === errorCod.noValidID) {
         nonexistentID(res);
         return;
