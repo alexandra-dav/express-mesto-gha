@@ -64,7 +64,7 @@ module.exports.createUser = (req, res) => {
     });
 };
 
-module.exports.showUser = (req, res) => {
+/* module.exports.showUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user === null) {
@@ -87,7 +87,7 @@ module.exports.showUser = (req, res) => {
         message: `${errorMassage.USER_ERROR_INFO}`,
       });
     });
-};
+}; */
 
 module.exports.updateUserData = (req, res) => {
   User.findByIdAndUpdate(
