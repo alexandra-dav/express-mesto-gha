@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
   // убеждаемся, что он есть или начинается с Bearer
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return res
-      .status(401)
+      .status(ERROR_UNAUTHORIZED)
       .send({ message: 'Необходима авторизация' });
   }
 
