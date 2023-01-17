@@ -5,21 +5,20 @@ const { ERROR_UNAUTHORIZED } = require('../utils/constants');
 module.exports = (req, res, next) => {
   // достаём авторизационный заголовок
   const { authorization } = req.headers;
-
   // убеждаемся, что он есть или начинается с Bearer
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!authorization) {
     return res
       .status(ERROR_UNAUTHORIZED)
-      .send({ message: 'Необходима авторизация' });
+      .send({ message: 'Необходима авторизация!' });
   }
 
   // извлечём токен
-  const token = authorization.replace('Bearer ', '');
+  const token = authorization;
   // верифицируем токен
   let payload;
   try {
     // попытаемся верифицировать токен
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, 'super-strong-secret');
   } catch (err) {
     // отправим ошибку, если не получилось
     return res

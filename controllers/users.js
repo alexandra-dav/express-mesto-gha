@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs'); // импортируем bcrypt
-const validator = require('validator');
+const bcrypt = require('bcryptjs');
+// const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const {
   errorCod, errorMassage,
@@ -10,7 +10,7 @@ const User = require('../models/user');
 function notFoundError(res) {
   res.status(ERROR_NOT_FOUND).send({ message: `${errorMassage.USER_NOT_FOUND}` });
 }
-function ValidationError(res) {
+function validationError(res) {
   res.status(ERROR_VALIDATION).send({ message: `${errorMassage.USER_NOT_VALID}` });
 }
 function nonexistentID(data) {
@@ -34,36 +34,34 @@ module.exports.createUser = (req, res) => {
   пароль и длину так называемой «соли» —
   случайной строки, которую метод добавит
   к паролю перед хешированем. */
-  if (validator.isEmail(req.body.email)) {
-    bcrypt.hash(req.body.password, 10)
-      .then((hash) => User.create({
-        ...req.body,
-        email: req.body.email,
-        password: hash, // записываем хеш в базу
-      }))
-      .then((user) => {
-        const {
-          name, about, avatar, _id, email, password,
-        } = user;
-        res.status(CREATED).send({
-          name,
-          about,
-          avatar,
-          _id,
-          email,
-          password,
-        });
-      })
-      .catch((err) => {
-        if (err.name === errorCod.noValidData) {
-          ValidationError(res);
-          return;
-        }
-        res.status(ERROR_INTERNAL_SERVER).send({
-          message: `${errorMassage.USER_ERROR_CREATE}`,
-        });
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => User.create({
+      ...req.body,
+      email: req.body.email,
+      password: hash, // записываем хеш в базу
+    }))
+    .then((user) => {
+      const {
+        name, about, avatar, _id, email, password,
+      } = user;
+      res.status(CREATED).send({
+        name,
+        about,
+        avatar,
+        _id,
+        email,
+        password,
       });
-  }
+    })
+    .catch((err) => {
+      if (err.name === errorCod.noValidData) {
+        validationError(res);
+        return;
+      }
+      res.status(ERROR_INTERNAL_SERVER).send({
+        message: `${errorMassage.USER_ERROR_CREATE}`,
+      });
+    });
 };
 
 module.exports.showUser = (req, res) => {
@@ -114,7 +112,7 @@ module.exports.updateUserData = (req, res) => {
     })
     .catch((err) => {
       if (err.name === errorCod.noValidData) {
-        ValidationError(res);
+        validationError(res);
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
@@ -149,7 +147,7 @@ module.exports.updateUserAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === errorCod.noValidData) {
-        ValidationError(res);
+        validationError(res);
         return;
       }
       res.status(ERROR_INTERNAL_SERVER).send({
@@ -166,19 +164,13 @@ module.exports.login = (req, res) => {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
-
-      return bcrypt.compare(password, user.password);
+      return User.findUserByCredentials(email, password);
     })
-    // eslint-disable-next-line consistent-return
-    .then((matched) => {
-      if (!matched) {
-        // хеши не совпали — отклоняем промис
-        return Promise.reject(new Error('Неправильные почта или пароль'));
-      }
-
+    .then((userData) => {
       // аутентификация успешна
       const token = jwt.sign(
-        { _id: matched },
+        { _id: userData._id },
+        'super-strong-secret',
         { expiresIn: '7d' },
       );
       /*
@@ -193,6 +185,7 @@ module.exports.login = (req, res) => {
         .send({ message: err.message });
     });
 };
+
 module.exports.showOwner = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
