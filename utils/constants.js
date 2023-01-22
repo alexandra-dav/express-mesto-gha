@@ -6,8 +6,8 @@ exports.errorCod = {
 // Тут описаны коды ответов
 exports.CREATED = 201;
 exports.ERROR_UNAUTHORIZED = 401;
-exports.ERROR_NOT_FOUND = 404;
 exports.ERROR_VALIDATION = 400;
+exports.ERROR_NOT_FOUND = 404;
 exports.ERROR_INTERNAL_SERVER = 500;
 // Тут описаны тексты сообщений для клиента
 exports.errorMassage = {
@@ -25,6 +25,7 @@ exports.errorMassage = {
   CARD_ID_NOT_FOUND: 'Невалидный ID карточки.',
   CARD_ERROR_CREATE: 'Произошла ошибка при создании новой карточки.',
   CARD_ERROR_DELETE: 'Произошла ошибка при удалении карточки.',
+  CARD_ERROR_CREDENTINAL: 'Вы не можете удалить эту карточку!',
   CARD_ERROR_LIST: 'Произошла ошибка при получении списка всех карточек',
   CARD_ERROR_LIKE: 'Произошла ошибка при добавлении отметки карточки лайком',
   CARD_ERROR_DISLIKE: 'Произошла ошибка при удалении отметки карточки лайком',

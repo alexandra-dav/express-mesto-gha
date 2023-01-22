@@ -3,7 +3,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 const cors = require('cors');
 const authorization = require('../middlewares/auth');
 const {
-  errorMassage, ERROR_NOT_FOUND,
+  errorMassage, ERROR_NOT_FOUND, ERROR_INTERNAL_SERVER,
 } = require('../utils/constants');
 const {
   login, createUser,
@@ -36,5 +36,16 @@ router.use('/cards', authorization, require('./cards'));
 router.use('*', (req, res) => (res.status(ERROR_NOT_FOUND).send({ message: errorMassage.PAGE_NOT_FOUND })));
 
 router.use(errors()); // обработчик ошибок celebrate
+
+router.use((err, req, res, next) => {
+  const { statusCode = ERROR_INTERNAL_SERVER, message } = err;
+  console.log(err.statusCode, message);
+  /* TODO обрабатывать ошибки errors() кастомно
+  if (res.message === 'Validation failed') {
+    res.status(400).send({ message: errorMassage.CARD_ID_NOT_FOUND });
+  } */
+  res.status(statusCode).send({ message });
+  next();
+});
 
 module.exports = router;
