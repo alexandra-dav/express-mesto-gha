@@ -1,6 +1,6 @@
 const Card = require('../models/cards');
 const {
-  errorMassage, CREATED,
+  errorMassage, statusCodeName,
 } = require('../utils/constants');
 const NotFoundError = require('../middlewares/not-found-err');
 const NoValidationError = require('../middlewares/no-validation-err');
@@ -20,7 +20,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId).populate(['owner', 'likes'])
     /* TODO удалить, если нельзя будет пользоваться проверкой celebrate
     .catch((err) => {
-      if (err.name === errorCod.noValidID) {
+      if (err.name === errorCodName.noValidID) {
         throw new NoValidationError(errorMassage.CARD_ID_NOT_FOUND);
       }
       throw new Error(errorMassage.CARD_ERROR_DELETE);
@@ -42,7 +42,7 @@ module.exports.deleteCard = (req, res, next) => {
 module.exports.createCard = (req, res, next) => {
   Card.create({ ...req.body, owner: req.user._id })
     .then((card) => Card.findById(card._id).populate(['owner']))
-    .then((fullCard) => res.status(CREATED).send(fullCard))
+    .then((fullCard) => res.status(statusCodeName.CREATED).send(fullCard))
     .catch(() => {
       throw new Error(errorMassage.CARD_ERROR_CREATE);
     })
@@ -65,7 +65,7 @@ module.exports.likeCard = (req, res, next) => {
     })
     .catch(next)
     .catch(() => {
-      throw new Error(errorMassage.CARD_ERROR_CREATE);
+      throw new Error(errorMassage.CARD_ERROR_LIKE);
     })
     .catch(next);
 };
@@ -86,11 +86,11 @@ module.exports.dislikeCard = (req, res, next) => {
     })
     .catch(next)
     .catch(() => {
-      throw new Error(errorMassage.CARD_ERROR_CREATE);
+      throw new Error(errorMassage.CARD_ERROR_DISLIKE);
     })
     .catch(next);
   /* .catch((err) => {
-      if (err.name === errorCod.noValidID) {
+      if (err.name === errorCodName.noValidID) {
         nonexistentID(res);
         return;
       }

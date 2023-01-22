@@ -1,14 +1,18 @@
 // Тут описаны наименования основных ошибок
-exports.errorCod = {
+exports.errorCodName = {
   noValidData: 'ValidationError',
   noValidID: 'CastError',
 };
 // Тут описаны коды ответов
-exports.CREATED = 201;
-exports.ERROR_UNAUTHORIZED = 401;
-exports.ERROR_VALIDATION = 400;
-exports.ERROR_NOT_FOUND = 404;
-exports.ERROR_INTERNAL_SERVER = 500;
+exports.statusCodeName = {
+  CREATED: 201,
+  ERROR_UNAUTHORIZED: 401,
+  ERROR_VALIDATION: 400,
+  ERROR_NOT_FOUND: 404,
+  ERROR_CONFLICT: 409,
+  ERROR_INTERNAL_SERVER: 500,
+};
+
 // Тут описаны тексты сообщений для клиента
 exports.errorMassage = {
   USER_NOT_VALID: 'Данные пользователя не валидны.',
@@ -20,6 +24,8 @@ exports.errorMassage = {
   USER_ERROR_UPDATE_DATE: 'Произошла ошибка при обновлении данных пользователя.',
   USER_ERROR_UPDATE_AVATAR: 'Произошла ошибка при обновлении аватара пользователя.',
   USER_ERROR_UNAUTHORIZED: 'Ошибка авторизации пользователя: проверьте логин и пароль.',
+  USER_ERROR_MUST_AUTHORIZED: 'Необходима авторизация.',
+  USER_ERROR_CONFLICT: 'Пользователь с данным email уже существует.',
   CARD_NOT_VALID: 'Данные не валидны.',
   CARD_NOT_FOUND: 'Карточка не найдена.',
   CARD_ID_NOT_FOUND: 'Невалидный ID карточки.',
