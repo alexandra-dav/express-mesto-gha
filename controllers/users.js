@@ -51,7 +51,7 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then((user) => {
       const {
-        name, about, avatar, _id, email, password,
+        name, about, avatar, _id, email,
       } = user;
       res.status(statusCodeName.CREATED).send({
         name,
@@ -59,7 +59,6 @@ module.exports.createUser = (req, res, next) => {
         avatar,
         _id,
         email,
-        password,
       });
     })
     .catch((err) => {

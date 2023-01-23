@@ -1,9 +1,9 @@
-const { statusCode } = require('../utils/constants');
+const { statusCodeName } = require('../utils/constants');
 
 class NoValidationError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = statusCode.ERROR_VALIDATION;
+    this.statusCode = statusCodeName.ERROR_VALIDATION;
   }
 }
 

@@ -4,6 +4,7 @@ const {
 } = require('../utils/constants');
 const NotFoundError = require('../middlewares/not-found-err');
 const NoValidationError = require('../middlewares/no-validation-err');
+const ForbiddenError = require('../middlewares/forbidden-err');
 
 module.exports.showAllCards = (req, res, next) => {
   Card.find({}).populate(['owner', 'likes'])
@@ -19,19 +20,19 @@ module.exports.showAllCards = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId).populate(['owner', 'likes'])
     /* TODO удалить, если нельзя будет пользоваться проверкой celebrate
+    */
     .catch((err) => {
-      if (err.name === errorCodName.noValidID) {
+      if (err.name === statusCodeName.noValidID) {
         throw new NoValidationError(errorMassage.CARD_ID_NOT_FOUND);
       }
       throw new Error(errorMassage.CARD_ERROR_DELETE);
-      // res.status(ERROR_INTERNAL_SERVER).send({ message: `${errorMassage.CARD_ERROR_DELETE}` });
-    }) */
+    })
     .then((card) => {
       if (!card) {
         throw new NotFoundError(errorMassage.CARD_NOT_FOUND);
       }
       if (req.user._id !== card.owner._id.toString()) {
-        throw new NoValidationError(errorMassage.CARD_ERROR_CREDENTINAL);
+        throw new ForbiddenError(errorMassage.CARD_ERROR_CREDENTINAL);
       }
       Card.findByIdAndRemove(req.params.cardId)
         .then((cardData) => res.send(cardData));
