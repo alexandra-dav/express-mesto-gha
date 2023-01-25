@@ -9,8 +9,9 @@ const {
   login, createUser,
 } = require('../controllers/users');
 
+const pattern = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9._]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=[\]]*)#?$/m;
+
 const router = Router();
-// const regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/;
 
 router.use(cors());
 router.post('/signin', celebrate({
@@ -23,7 +24,7 @@ router.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/^https?:\/\/[www.]?[a-zA-Z0-9._~:/?#[\]@!\-$&'*+,;=]+#?/),
+    avatar: Joi.string().pattern(new RegExp(pattern)),
     email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }).required(),
     password: Joi.string().pattern(/^[a-zA-Z0-9]{3,30}$/).required(),
   }),
@@ -33,7 +34,7 @@ router.post('/signup', celebrate({
 router.use('/users', authorization, require('./users'));
 router.use('/cards', authorization, require('./cards'));
 
-router.use('*', (req, res) => (res.status(statusCodeName.ERROR_NOT_FOUND).send({ message: errorMassage.PAGE_NOT_FOUND })));
+router.use('*', (req, res, next) => (next({ message: errorMassage.PAGE_NOT_FOUND })));
 
 router.use(errors()); // обработчик ошибок celebrate
 
