@@ -1,5 +1,5 @@
+const { JWT_SECRET = 'dev-key' } = process.env;
 const bcrypt = require('bcryptjs');
-const { JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const {
   errorCodName, statusCodeName, errorMassage,

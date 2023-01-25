@@ -1,7 +1,6 @@
 {
   "env": {
-    "es2021": true,
-    "JWT_SECRET": "dev-key"
+    "es2021": true
   },
   "extends": "airbnb-base",
   "rules": {
