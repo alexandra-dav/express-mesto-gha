@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { errorMassage } = require('../utils/constants');
+const UnauthorizedError = require('../middlewares/unauthorized-err');
 
 const userSchema = new Schema({
   name: {
@@ -38,7 +40,7 @@ userSchema.statics.findUserByCredentials = function checkUser(email, password) {
     .then((user) => bcrypt.compare(password, user.password)
       .then((matched) => {
         if (!matched) {
-          return Promise.reject(new Error('Неправильные почта или пароль'));
+          return Promise.reject(new UnauthorizedError(errorMassage.USER_ERROR_UNAUTHORIZED));
         }
         return user;
       }));
