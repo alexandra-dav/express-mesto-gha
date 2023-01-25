@@ -8,6 +8,7 @@ const {
 const {
   login, createUser,
 } = require('../controllers/users');
+const NotFoundError = require('../middlewares/not-found-err');
 
 const pattern = /^https?:\/\/(?:www\.)?[-a-zA-Z0-9._]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=[\]]*)#?$/m;
 
@@ -34,7 +35,7 @@ router.post('/signup', celebrate({
 router.use('/users', authorization, require('./users'));
 router.use('/cards', authorization, require('./cards'));
 
-router.use('*', (req, res, next) => (next({ message: errorMassage.PAGE_NOT_FOUND })));
+router.use('*', (req, res, next) => (next(new NotFoundError(errorMassage.PAGE_NOT_FOUND))));
 
 router.use(errors()); // обработчик ошибок celebrate
 
