@@ -86,12 +86,7 @@ module.exports.updateUserData = (req, res, next) => {
       if (!user) {
         throw new NotFoundError(errorMassage.USER_NOT_FOUND);
       }
-      const {
-        name, about, avatar, _id,
-      } = user;
-      res.send({
-        name, about, avatar, _id,
-      });
+      res.send(user);
     })
     .catch(next)
     .catch((err) => {
@@ -119,15 +114,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
       if (!user) {
         throw new NotFoundError(errorMassage.USER_NOT_FOUND);
       }
-      const {
-        name, about, avatar, _id,
-      } = user;
-      res.send({
-        name,
-        about,
-        avatar,
-        _id,
-      });
+      res.send(user);
     })
     .catch(next)
     .catch((err) => {

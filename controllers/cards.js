@@ -19,8 +19,6 @@ module.exports.showAllCards = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId).populate(['owner', 'likes'])
-    /* TODO удалить, если нельзя будет пользоваться проверкой celebrate
-    */
     .catch((err) => {
       if (err.name === statusCodeName.noValidID) {
         throw new NoValidationError(errorMassage.CARD_ID_NOT_FOUND);
