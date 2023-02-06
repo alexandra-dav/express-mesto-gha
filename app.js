@@ -3,8 +3,6 @@ const { json, urlencoded } = require('express');
 const { connect } = require('mongoose');
 const router = require('./routes/index');
 
-const { PORT = 3000 } = process.env;
-
 const app = express();
 
 app.use(json());
@@ -18,4 +16,4 @@ connect('mongodb://localhost:27017/mestodb', {
 // подключаем мидлвары, роуты и всё остальное...
 app.use('/', router);
 
-app.listen(PORT);
+module.exports = app;
